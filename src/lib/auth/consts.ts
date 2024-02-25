@@ -1,6 +1,6 @@
 export const rpName = 'Stupid simple WebAuthn'
 
-export const rpID = 'dfdc-94-172-59-78.ngrok-free.app'
+export const rpID = 'stupidsimplewebauthn-7u6r5bniz-wtfamidoing.vercel.app'
 
 export const origin = `https://${rpID}`
 
