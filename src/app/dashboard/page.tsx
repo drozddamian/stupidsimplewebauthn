@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react'
 import { User } from '@/types'
 import { useRouter } from 'next/navigation'
+import { PasskeysList } from '@/components/PasskeysList'
+import { AddNewAuthenticatorButton } from '@/components/AddNewAuthenticatorButton'
 
 export default function Dashboard() {
   const { push } = useRouter()
@@ -11,6 +13,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchUser() {
       const response = await fetch('/api/dashboard')
+
       if (response.ok) {
         const userData = await response.json()
         setUser(userData)
@@ -38,21 +41,19 @@ export default function Dashboard() {
 
   return (
     <div>
-      <button onClick={handleLogout}>Logout</button>
+      <button
+        className="absolute right-10 top-10 border p-2"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
 
-      <h1>{`Hello ${user.username}`}</h1>
+      <h1 className="mb-10 text-xl">{`Hello ${user.username}`}</h1>
 
       <div>
-        <p className="text-xs">You can now add your passkey</p>
+        <PasskeysList />
 
-        <button
-          className="font-bold text-sky-500"
-          onClick={() => {
-            console.log('todo')
-          }}
-        >
-          Add passkey
-        </button>
+        <AddNewAuthenticatorButton />
       </div>
     </div>
   )

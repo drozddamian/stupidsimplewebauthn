@@ -3,12 +3,6 @@ import type {
   CredentialDeviceType,
 } from '@simplewebauthn/types'
 
-type UserModel = {
-  id: string
-  username: string
-  currentChallenge?: string
-}
-
 /**
  * It is strongly advised that authenticators get their own DB
  * table, ideally with a foreign key to a specific UserModel.
@@ -17,7 +11,8 @@ type UserModel = {
  * how best to store data received during registration for use
  * in subsequent authentications.
  */
-type Authenticator = {
+export type Authenticator = {
+  id?: string
   // SQL: Encode to base64url then store as `TEXT`. Index this column
   credentialID: Uint8Array
   // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...

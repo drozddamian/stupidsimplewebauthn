@@ -22,7 +22,6 @@ export const RegisterForm = () => {
     if (!res.ok) {
       setErrorMessage(res.statusText)
     } else {
-      console.log('SUCCESS')
       await push('/dashboard')
     }
   }

@@ -1,6 +1,6 @@
 export const rpName = 'Stupid simple WebAuthn'
 
-export const rpID = 'localhost'
+export const rpID = 'dfdc-94-172-59-78.ngrok-free.app'
 
 export const origin = `https://${rpID}`
 
