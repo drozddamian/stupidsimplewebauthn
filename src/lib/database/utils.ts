@@ -7,7 +7,7 @@ export const getExistingUser = (username: string): Promise<User | null> => {
     db.get(
       'SELECT * FROM Users WHERE username = ?',
       [username],
-      (err, existingUser: User | null) => {
+      (err: Error, existingUser: User | null) => {
         if (err) {
           reject(err)
         } else {
@@ -24,7 +24,7 @@ export const insertUser = (username: string, hashedPassword: string) => {
       db.run(
         'INSERT INTO Users (username, password) VALUES (?, ?)',
         [username, hashedPassword],
-        function (err) {
+        function (err: Error) {
           if (err) {
             reject(err)
             return
@@ -43,7 +43,7 @@ export const getExistingUserAuthenticators = (
     db.all(
       'SELECT * FROM Authenticators WHERE userID = ?',
       [userId],
-      (err, authenticators: Authenticator[] | null) => {
+      (err: Error, authenticators: Authenticator[] | null) => {
         if (err) {
           reject(err)
         } else {
@@ -62,7 +62,7 @@ export const getExistingUserAuthenticatorById = (
     db.get(
       'SELECT * FROM Authenticators WHERE userID = ? AND id = ?',
       [userId, authenticatorId],
-      (err, authenticator: Authenticator | null) => {
+      (err: Error, authenticator: Authenticator | null) => {
         if (err) {
           reject(err)
         } else {
@@ -81,7 +81,7 @@ export const updateChallengeForUser = (
     db.run(
       'UPDATE Users SET challenge = ? WHERE id = ?',
       [challenge, userId],
-      (err) => {
+      (err: Error) => {
         if (err) {
           reject(err)
         } else {
@@ -110,7 +110,7 @@ export const insertAuthenticator = (
         authenticator.credentialBackedUp,
         authenticator.transports ? authenticator.transports.join(',') : '',
       ],
-      (err) => {
+      (err: Error) => {
         if (err) {
           reject(err)
         } else {

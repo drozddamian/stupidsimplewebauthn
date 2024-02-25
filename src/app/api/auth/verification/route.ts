@@ -25,10 +25,16 @@ export async function POST(req: Request) {
       })
     }
 
-    const authenticator = getExistingUserAuthenticatorById(
+    const authenticator = await getExistingUserAuthenticatorById(
       existingUser.id,
       body.id,
     )
+
+    if (!authenticator) {
+      return new Response('Unauthorized', {
+        status: 400,
+      })
+    }
 
     await verifyAuthenticationResponse({
       response: authenticatorResponse,

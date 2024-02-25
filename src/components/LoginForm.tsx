@@ -3,18 +3,12 @@ import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { startAuthentication } from '@simplewebauthn/browser'
 
-enum LoginFlowSteps {
-  Username,
-  PasswordLess,
-  Password,
-}
+type LoginFlowStep = 'username' | 'password'
 
 export const LoginForm = () => {
   const { push } = useRouter()
 
-  const [loginFlowStep, setLoginFlowStep] = useState<LoginFlowSteps>(
-    LoginFlowSteps.Username,
-  )
+  const [loginFlowStep, setLoginFlowStep] = useState<LoginFlowStep>('username')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
@@ -22,7 +16,7 @@ export const LoginForm = () => {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
 
-    if (loginFlowStep === LoginFlowSteps.Username) {
+    if (loginFlowStep === 'username') {
       const loginOptionsResponse = await fetch('api/auth/options', {
         method: 'POST',
         headers: {
@@ -35,7 +29,7 @@ export const LoginForm = () => {
       const { allowCredentials } = options
 
       if (allowCredentials.length === 0) {
-        setLoginFlowStep(LoginFlowSteps.Password)
+        setLoginFlowStep('password')
         return
       }
 
@@ -49,14 +43,14 @@ export const LoginForm = () => {
         if (!verificationResponse.ok) {
           setErrorMessage(verificationResponse.statusText)
         } else {
-          await push('/dashboard')
+          push('/dashboard')
         }
       } catch (error) {
         setErrorMessage(JSON.stringify(error))
       }
     }
 
-    if (loginFlowStep === LoginFlowSteps.Password) {
+    if (loginFlowStep === 'password') {
       const passwordAuthResponse = await fetch('api/auth/login', {
         method: 'POST',
         body: JSON.stringify({ username, password }),
@@ -65,7 +59,7 @@ export const LoginForm = () => {
       if (!passwordAuthResponse.ok) {
         setErrorMessage(passwordAuthResponse.statusText)
       } else {
-        await push('/dashboard')
+        push('/dashboard')
       }
     }
   }
@@ -75,7 +69,7 @@ export const LoginForm = () => {
       className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md"
       onSubmit={handleSubmit}
     >
-      {loginFlowStep === LoginFlowSteps.Username && (
+      {loginFlowStep === 'username' && (
         <div className="mb-4">
           <label className="mb-2 block text-sm font-bold text-gray-700">
             Username
@@ -92,7 +86,7 @@ export const LoginForm = () => {
         </div>
       )}
 
-      {loginFlowStep === LoginFlowSteps.Password && (
+      {loginFlowStep === 'password' && (
         <div className="mb-6">
           <label className="mb-2 block text-sm font-bold text-gray-700">
             Password

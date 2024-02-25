@@ -2,7 +2,7 @@ const path = require('path')
 const sqlite3 = require('sqlite3').verbose()
 const databasePathname = path.join(process.cwd(), 'stupidsimple.db')
 
-const db = new sqlite3.Database(databasePathname, (err) => {
+const db = new sqlite3.Database(databasePathname, (err: Error) => {
   if (err) {
     console.error('Error opening database', err.message)
   } else {
@@ -20,7 +20,7 @@ db.serialize(() => {
       challenge TEXT
     )
   `,
-    (err) => {
+    (err: Error) => {
       if (err) {
         console.error('Error creating Users table', err)
       } else {
@@ -49,7 +49,7 @@ db.serialize(() => {
     
     CREATE INDEX idx_authenticators_credentialID ON Authenticators (credentialID);
   `,
-    (err) => {
+    (err: Error) => {
       if (err) {
         console.error('Error creating table Authenticators', err)
       } else {
@@ -58,7 +58,7 @@ db.serialize(() => {
     },
   )
 
-  db.close((err) => {
+  db.close((err: Error) => {
     if (err) {
       console.error('Error closing database', err)
     } else {
