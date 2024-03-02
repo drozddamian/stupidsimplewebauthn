@@ -25,7 +25,7 @@ export const getExistingUserAuthenticators = async (
 ): Promise<Authenticator[] | null> => {
   try {
     const existingUserAuthenticators: QueryResult<Authenticator> =
-      await sql`SELECT * FROM Users WHERE Userid = ${userId};`
+      await sql`SELECT * FROM Authenticators WHERE user_id = ${userId};`
 
     return existingUserAuthenticators.rows ?? null
   } catch (error) {
@@ -40,7 +40,7 @@ export const getExistingUserAuthenticatorById = async (
 ): Promise<Authenticator | null> => {
   try {
     const userAuthenticatorById: QueryResult<Authenticator> =
-      await sql`SELECT * FROM Authenticators WHERE userID = ${userId} AND id = ${authenticatorId};`
+      await sql`SELECT * FROM Authenticators WHERE id = ${authenticatorId} AND user_id = ${userId};`
 
     return userAuthenticatorById.rows ? userAuthenticatorById.rows[0] : null
   } catch (error) {
@@ -61,8 +61,8 @@ export const insertAuthenticator = (
   authenticator: Authenticator,
 ): Promise<QueryResult<Authenticator>> => {
   return sql`
-    INSERT INTO Users 
-        (userID, credentialID, credentialPublicKey, counter, credentialDeviceType, credentialBackedUp, transports)  
+    INSERT INTO Authenticators 
+        (user_id, credential_id, credential_public_key, counter, credential_device_type, credential_backed_up, transports)  
         VALUES (
           ${userId},
           ${String(authenticator.credentialID)},

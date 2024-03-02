@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 export async function GET() {
   try {
     await sql`
-     CREATE TABLE IF NOT EXISTS Users (
+     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       username TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
@@ -12,19 +12,19 @@ export async function GET() {
     );`
 
     await sql`
-     CREATE TABLE IF NOT EXISTS Authenticators (
+     CREATE TABLE IF NOT EXISTS authenticators (
       id SERIAL PRIMARY KEY,
-      userID INTEGER NOT NULL,
-      credentialID TEXT NOT NULL,
-      credentialPublicKey BYTEA NOT NULL,
+      user_id INTEGER NOT NULL,
+      credential_id TEXT NOT NULL,
+      credential_public_key BYTEA NOT NULL,
       counter BIGINT NOT NULL,
-      credentialDeviceType VARCHAR(32) NOT NULL,
-      credentialBackedUp BOOLEAN NOT NULL,
+      credential_device_type VARCHAR(32) NOT NULL,
+      credential_backed_up BOOLEAN NOT NULL,
       transports VARCHAR(255),
-      CONSTRAINT fk_user FOREIGN KEY(userID) REFERENCES Users(id) ON DELETE CASCADE
+      CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE
     );`
 
-    await sql`CREATE INDEX IF NOT EXISTS idx_authenticators_credentialID ON Authenticators (credentialID);`
+    await sql`CREATE INDEX IF NOT EXISTS idx_authenticators_credentialID ON Authenticators (credential_id);`
 
     return NextResponse.json({ message: 'success' }, { status: 200 })
   } catch (error) {

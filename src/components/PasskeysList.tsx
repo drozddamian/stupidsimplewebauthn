@@ -34,16 +34,20 @@ export const PasskeysList = () => {
       <h2 className="text-l mb-4">Your Authenticators</h2>
 
       <div className="flex-col">
-        {passkeys.map((passkey, index) => (
-          <div className="mb-2 flex flex-row" key={passkey.id}>
-            <span className="mr-4 text-xl">{index})</span>
+        {passkeys.map((passkey, index) => {
+          console.log('passkey: ', passkey)
 
-            <div>
-              <h3>credentialDeviceType: {passkey.credentialDeviceType}</h3>
-              <p>Counter: {passkey.counter}</p>
+          return (
+            <div className="mb-2 flex flex-row" key={passkey.id}>
+              <span className="mr-4 text-xl">{index})</span>
+
+              <div>
+                <h3>credentialDeviceType: {passkey.credentialDeviceType}</h3>
+                <p>Counter: {passkey.counter}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

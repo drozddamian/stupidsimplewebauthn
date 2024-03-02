@@ -28,7 +28,7 @@ export const LoginForm = () => {
       const options = await loginOptionsResponse.json()
       const { allowCredentials } = options
 
-      if (allowCredentials.length === 0) {
+      if (allowCredentials?.length === 0) {
         setLoginFlowStep('password')
         return
       }
