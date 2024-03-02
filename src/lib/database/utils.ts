@@ -5,9 +5,8 @@ import {
   arrayToCSV,
   authenticatorTransportCSVToTypedArray,
   fromBase64UrlString,
-  toBase64Url,
-  toBytea,
 } from '@/utils'
+import { isoBase64URL } from '@simplewebauthn/server/helpers'
 
 export const getExistingUser = async (
   username: string,
@@ -30,13 +29,15 @@ export const getExistingUserAuthenticators = async (
     const existingUserAuthenticators: QueryResult<RawAuthenticator> =
       await sql`SELECT * FROM Authenticators WHERE user_id = ${userId};`
 
+    console.log('existingUserAuthenticators: ', existingUserAuthenticators)
+
     return (
       existingUserAuthenticators.rows.map((authenticatorDatabaseValues) => ({
         id: authenticatorDatabaseValues.id,
         credentialID: fromBase64UrlString(
           authenticatorDatabaseValues.credential_id,
         ),
-        credentialPublicKey: new Uint8Array(
+        credentialPublicKey: fromBase64UrlString(
           authenticatorDatabaseValues.credential_public_key,
         ),
         counter: Number(authenticatorDatabaseValues.counter),
@@ -62,13 +63,15 @@ export const getExistingUserAuthenticatorById = async (
     const userAuthenticatorById: QueryResult<RawAuthenticator> =
       await sql`SELECT * FROM Authenticators WHERE credential_id = ${authenticatorId} AND user_id = ${userId};`
 
+    console.log('userAuthenticatorById: ', userAuthenticatorById)
+
     return userAuthenticatorById.rows
       ? {
           id: userAuthenticatorById.rows[0].id,
           credentialID: fromBase64UrlString(
             userAuthenticatorById.rows[0].credential_id,
           ),
-          credentialPublicKey: new Uint8Array(
+          credentialPublicKey: fromBase64UrlString(
             userAuthenticatorById.rows[0].credential_public_key,
           ),
           counter: Number(userAuthenticatorById.rows[0].counter),
@@ -107,14 +110,11 @@ export const insertAuthenticator = (
         (user_id, credential_id, credential_public_key, counter, credential_device_type, credential_backed_up, transports)  
         VALUES (
           ${userId},
-          ${toBase64Url(authenticator.credentialID)},
-          ${
-            // @ts-ignore
-            toBytea(authenticator.credentialPublicKey)
-          },
+          ${isoBase64URL.fromBuffer(authenticator.credentialID)},
+          ${isoBase64URL.fromBuffer(authenticator.credentialPublicKey)},
           ${authenticator.counter},
           ${authenticator.credentialDeviceType},
-          ${authenticator.credentialBackedUp},
+          ${authenticator.credentialBackedUp}, 
           ${authenticator.transports ? arrayToCSV(authenticator.transports) : null}
         );`
 }

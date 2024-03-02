@@ -16,7 +16,7 @@ export async function GET() {
       id SERIAL PRIMARY KEY,
       user_id INTEGER NOT NULL, -- You need to define this column
       credential_id TEXT NOT NULL,
-      credential_public_key BYTEA NOT NULL,
+      credential_public_key TEXT NOT NULL,
       counter BIGINT NOT NULL,
       credential_device_type VARCHAR(32) NOT NULL,
       credential_backed_up BOOLEAN NOT NULL,

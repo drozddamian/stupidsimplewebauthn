@@ -18,6 +18,7 @@ export function arrayToCSV(array: string[]): string {
 }
 
 export function fromBase64UrlString(base64url: string): Uint8Array {
+  console.log('base64url: ', base64url)
   // Convert base64url to base64 by replacing URL-safe characters with the standard base64 equivalents
   const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/')
 

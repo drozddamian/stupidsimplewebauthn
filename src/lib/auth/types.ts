@@ -32,7 +32,7 @@ export type Authenticator = {
 export type RawAuthenticator = {
   id?: string
   credential_id: string
-  credential_public_key: Buffer
+  credential_public_key: string
   counter: number
   credential_device_type: CredentialDeviceType
   credential_backed_up: boolean
