@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "initDb": "node src/lib/database/initializeDb.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -13,6 +12,7 @@
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.3",
     "@types/sqlite3": "^3.1.11",
+    "@vercel/postgres": "^0.7.2",
     "bcrypt": "^5.1.1",
     "iron-session": "^8.0.1",
     "next": "14.1.0",
