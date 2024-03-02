@@ -6,6 +6,12 @@ import {
   updateChallengeForUser,
   getExistingUserAuthenticators,
 } from '@/lib/database/utils'
+import { AuthenticatorTransportFuture } from '@simplewebauthn/types'
+
+interface PublicKeyCredentialDescriptorFuture
+  extends Omit<PublicKeyCredentialDescriptor, 'transports'> {
+  transports?: AuthenticatorTransportFuture[]
+}
 
 export async function POST(req: Request) {
   try {
@@ -30,22 +36,24 @@ export async function POST(req: Request) {
       existingUser.id,
     )
 
-    console.log('userAuthenticators: ', userAuthenticators)
-
-    const options = await generateAuthenticationOptions({
-      rpID,
-      allowCredentials: userAuthenticators?.map((authenticator) => ({
+    const allowCredentials: PublicKeyCredentialDescriptorFuture[] | undefined =
+      userAuthenticators?.map((authenticator) => ({
         id: authenticator.credentialID,
         type: 'public-key',
         transports: authenticator.transports,
-      })),
+      }))
+
+    const options = await generateAuthenticationOptions({
+      rpID,
       userVerification: 'preferred',
+      allowCredentials,
     })
 
     await updateChallengeForUser(existingUser.id, options.challenge)
 
     return NextResponse.json(options)
   } catch (error) {
+    console.error(error)
     return new Response('Internal Server Error', {
       status: 500,
     })

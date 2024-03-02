@@ -35,10 +35,13 @@ export const LoginForm = () => {
 
       try {
         const authenticationResponse = await startAuthentication(options)
-        const verificationResponse = await fetch('/api/passkey/verification', {
+
+        const verificationResponse = await fetch('/api/auth/verification', {
           method: 'POST',
-          body: JSON.stringify({ authenticationResponse }),
+          body: JSON.stringify({ username, authenticationResponse }),
         })
+
+        console.log('verificationResponse: ', verificationResponse)
 
         if (!verificationResponse.ok) {
           setErrorMessage(verificationResponse.statusText)
@@ -46,6 +49,7 @@ export const LoginForm = () => {
           push('/dashboard')
         }
       } catch (error) {
+        console.error('error: ', error)
         setErrorMessage(JSON.stringify(error))
       }
     }

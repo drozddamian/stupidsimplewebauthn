@@ -12,8 +12,9 @@ export async function GET() {
     );`
 
     await sql`
-     CREATE TABLE IF NOT EXISTS authenticators (
-      id SERIAL PRIMARY KEY, 
+    CREATE TABLE IF NOT EXISTS authenticators (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL, -- You need to define this column
       credential_id TEXT NOT NULL,
       credential_public_key BYTEA NOT NULL,
       counter BIGINT NOT NULL,

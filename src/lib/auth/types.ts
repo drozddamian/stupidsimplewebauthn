@@ -31,10 +31,10 @@ export type Authenticator = {
 
 export type RawAuthenticator = {
   id?: string
-  credential_id: Uint8Array
-  credential_public_key: Uint8Array
+  credential_id: string
+  credential_public_key: Buffer
   counter: number
   credential_device_type: CredentialDeviceType
   credential_backed_up: boolean
-  transports?: AuthenticatorTransportFuture[]
+  transports?: string
 }

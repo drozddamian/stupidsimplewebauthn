@@ -8,6 +8,7 @@ import { getExistingUser, insertAuthenticator } from '@/lib/database/utils'
 export async function POST(req: Request) {
   try {
     const body = await req.json()
+
     const { authenticatorResponse } = body
 
     if (!authenticatorResponse) {
@@ -53,7 +54,7 @@ export async function POST(req: Request) {
       counter: registrationInfo.counter,
       credentialDeviceType: registrationInfo.credentialDeviceType,
       credentialBackedUp: registrationInfo.credentialBackedUp,
-      transports: authenticatorResponse.transports,
+      transports: authenticatorResponse.response.transports,
     }
 
     await insertAuthenticator(existingUser.id, newAuthenticator)

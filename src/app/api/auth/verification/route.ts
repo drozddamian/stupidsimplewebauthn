@@ -5,13 +5,15 @@ import {
   getExistingUser,
   getExistingUserAuthenticatorById,
 } from '@/lib/database/utils'
+import { VerifyAuthenticationResponseOpts } from '@simplewebauthn/server/esm/authentication/verifyAuthenticationResponse'
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { username, authenticatorResponse } = body
 
-    if (!authenticatorResponse || !username) {
+    const { username, authenticationResponse } = body
+
+    if (!authenticationResponse || !username) {
       return new Response('Authenticator response and username are required', {
         status: 400,
       })
@@ -27,7 +29,7 @@ export async function POST(req: Request) {
 
     const authenticator = await getExistingUserAuthenticatorById(
       existingUser.id,
-      body.id,
+      authenticationResponse.id,
     )
 
     if (!authenticator) {
@@ -36,13 +38,30 @@ export async function POST(req: Request) {
       })
     }
 
-    await verifyAuthenticationResponse({
-      response: authenticatorResponse,
-      expectedChallenge: existingUser.challenge,
-      expectedOrigin: origin,
-      expectedRPID: rpID,
-      authenticator,
-    })
+    const verifyAuthenticationResponseOptions: VerifyAuthenticationResponseOpts =
+      {
+        response: authenticationResponse,
+        expectedChallenge: existingUser.challenge,
+        expectedOrigin: origin,
+        expectedRPID: rpID,
+        authenticator: {
+          counter: authenticator.counter,
+          transports: authenticator?.transports,
+          credentialID: authenticator.credentialID,
+          credentialPublicKey: authenticator.credentialPublicKey,
+        },
+      }
+
+    console.log(
+      'verifyAuthenticationResponseOptions: ',
+      verifyAuthenticationResponseOptions,
+    )
+
+    const response = await verifyAuthenticationResponse(
+      verifyAuthenticationResponseOptions,
+    )
+
+    console.log('response:', response)
 
     cookies().set(SESSION_COOKIE_NAME, username)
 
