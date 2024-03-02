@@ -6,12 +6,6 @@ import {
   updateChallengeForUser,
   getExistingUserAuthenticators,
 } from '@/lib/database/utils'
-import { AuthenticatorTransportFuture } from '@simplewebauthn/types'
-
-interface PublicKeyCredentialDescriptorFuture
-  extends Omit<PublicKeyCredentialDescriptor, 'transports'> {
-  transports?: AuthenticatorTransportFuture[]
-}
 
 export async function POST(req: Request) {
   try {
@@ -36,16 +30,16 @@ export async function POST(req: Request) {
       existingUser.id,
     )
 
-    const allowCredentials: PublicKeyCredentialDescriptorFuture[] | undefined =
-      userAuthenticators?.map((authenticator) => ({
-        id: authenticator.credentialID,
-        type: 'public-key',
-        transports: authenticator.transports,
-      }))
+    const allowCredentials = userAuthenticators?.map((authenticator) => ({
+      id: authenticator.credentialID,
+      type: 'public-key',
+      transports: authenticator.transports,
+    }))
 
     const options = await generateAuthenticationOptions({
       rpID,
       userVerification: 'preferred',
+      // @ts-ignore
       allowCredentials,
     })
 

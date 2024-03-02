@@ -5,7 +5,6 @@ import {
   getExistingUser,
   getExistingUserAuthenticatorById,
 } from '@/lib/database/utils'
-import { VerifyAuthenticationResponseOpts } from '@simplewebauthn/server/esm/authentication/verifyAuthenticationResponse'
 
 export async function POST(req: Request) {
   try {
@@ -38,28 +37,18 @@ export async function POST(req: Request) {
       })
     }
 
-    const verifyAuthenticationResponseOptions: VerifyAuthenticationResponseOpts =
-      {
-        response: authenticationResponse,
-        expectedChallenge: existingUser.challenge,
-        expectedOrigin: origin,
-        expectedRPID: rpID,
-        authenticator: {
-          counter: authenticator.counter,
-          transports: authenticator?.transports,
-          credentialID: authenticator.credentialID,
-          credentialPublicKey: authenticator.credentialPublicKey,
-        },
-      }
-
-    console.log(
-      'verifyAuthenticationResponseOptions: ',
-      verifyAuthenticationResponseOptions,
-    )
-
-    const response = await verifyAuthenticationResponse(
-      verifyAuthenticationResponseOptions,
-    )
+    const response = await verifyAuthenticationResponse({
+      response: authenticationResponse,
+      expectedChallenge: existingUser.challenge,
+      expectedOrigin: origin,
+      expectedRPID: rpID,
+      authenticator: {
+        counter: authenticator.counter,
+        transports: authenticator?.transports,
+        credentialID: authenticator.credentialID,
+        credentialPublicKey: authenticator.credentialPublicKey,
+      },
+    })
 
     console.log('response:', response)
 
