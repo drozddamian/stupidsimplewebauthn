@@ -41,8 +41,6 @@ export const LoginForm = () => {
           body: JSON.stringify({ username, authenticationResponse }),
         })
 
-        console.log('verificationResponse: ', verificationResponse)
-
         if (!verificationResponse.ok) {
           setErrorMessage(verificationResponse.statusText)
         } else {

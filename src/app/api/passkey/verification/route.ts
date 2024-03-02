@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       verified,
     })
   } catch (error) {
-    console.log('error: ', error)
+    console.error('error: ', error)
     return new Response('Internal Server Error', {
       status: 500,
     })

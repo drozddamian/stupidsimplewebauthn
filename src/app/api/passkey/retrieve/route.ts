@@ -28,8 +28,6 @@ export async function GET() {
       existingUser.id,
     )
 
-    console.log('userAuthenticators: ', userAuthenticators)
-
     return NextResponse.json({
       id: existingUser.id,
       authenticators: userAuthenticators,

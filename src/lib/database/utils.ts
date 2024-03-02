@@ -29,8 +29,6 @@ export const getExistingUserAuthenticators = async (
     const existingUserAuthenticators: QueryResult<RawAuthenticator> =
       await sql`SELECT * FROM Authenticators WHERE user_id = ${userId};`
 
-    console.log('existingUserAuthenticators: ', existingUserAuthenticators)
-
     return (
       existingUserAuthenticators.rows.map((authenticatorDatabaseValues) => ({
         id: authenticatorDatabaseValues.id,
@@ -63,8 +61,6 @@ export const getExistingUserAuthenticatorById = async (
     const userAuthenticatorById: QueryResult<RawAuthenticator> =
       await sql`SELECT * FROM Authenticators WHERE credential_id = ${authenticatorId} AND user_id = ${userId};`
 
-    console.log('userAuthenticatorById: ', userAuthenticatorById)
-
     return userAuthenticatorById.rows
       ? {
           id: userAuthenticatorById.rows[0].id,
@@ -95,6 +91,13 @@ export const updateChallengeForUser = (
   challenge: string,
 ): Promise<QueryResult> => {
   return sql`UPDATE Users SET challenge = ${challenge} WHERE id = ${userId};`
+}
+
+export const updateAuthenticatorCounter = (
+  credentialId: string,
+  newCounter: number,
+): Promise<QueryResult> => {
+  return sql`UPDATE authenticators SET counter = ${newCounter} WHERE credential_id = ${credentialId};`
 }
 
 export const insertUser = (username: string, hashedPassword: string) => {

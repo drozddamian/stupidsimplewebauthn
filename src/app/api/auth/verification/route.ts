@@ -1,9 +1,11 @@
 import { cookies } from 'next/headers'
+import { isoBase64URL } from '@simplewebauthn/server/helpers'
 import { verifyAuthenticationResponse } from '@simplewebauthn/server'
 import { origin, rpID, SESSION_COOKIE_NAME } from '@/lib/auth/consts'
 import {
   getExistingUser,
   getExistingUserAuthenticatorById,
+  updateAuthenticatorCounter,
 } from '@/lib/database/utils'
 
 export async function POST(req: Request) {
@@ -37,7 +39,7 @@ export async function POST(req: Request) {
       })
     }
 
-    const response = await verifyAuthenticationResponse({
+    const verification = await verifyAuthenticationResponse({
       response: authenticationResponse,
       expectedChallenge: existingUser.challenge,
       expectedOrigin: origin,
@@ -50,7 +52,13 @@ export async function POST(req: Request) {
       },
     })
 
-    console.log('response:', response)
+    const { authenticationInfo } = verification
+    const { newCounter } = authenticationInfo
+
+    await updateAuthenticatorCounter(
+      isoBase64URL.fromBuffer(authenticator.credentialID),
+      newCounter,
+    )
 
     cookies().set(SESSION_COOKIE_NAME, username)
 
@@ -58,7 +66,7 @@ export async function POST(req: Request) {
       status: 200,
     })
   } catch (error) {
-    console.log('error: ', error)
+    console.error('error: ', error)
     return new Response('Internal Server Error', {
       status: 500,
     })

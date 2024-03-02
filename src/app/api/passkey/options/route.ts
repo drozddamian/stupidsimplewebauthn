@@ -8,8 +8,12 @@ import {
   getExistingUserAuthenticators,
 } from '@/lib/database/utils'
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const body = await req.json()
+
+    const { authenticatorOptions } = body
+
     const username = cookies().get(SESSION_COOKIE_NAME)?.value
 
     if (!username) {
@@ -42,8 +46,9 @@ export async function POST() {
         transports: authenticator.transports,
       })),
       authenticatorSelection: {
-        residentKey: 'preferred',
-        userVerification: 'preferred',
+        residentKey: authenticatorOptions.residentKeyRequirement,
+        userVerification: authenticatorOptions.userVerification,
+        authenticatorAttachment: authenticatorOptions.authenticatorAttachment,
       },
     })
 

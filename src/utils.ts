@@ -1,24 +1,10 @@
-// Function to convert Uint8Array to base64url string
 import { AuthenticatorTransportFuture } from '@simplewebauthn/types'
-
-export function toBase64Url(uint8Array: Uint8Array): string {
-  return Buffer.from(uint8Array)
-    .toString('base64')
-    .replace(/\+/g, '-') // Convert '+' to '-'
-    .replace(/\//g, '_') // Convert '/' to '_'
-    .replace(/=+$/, '') // Remove trailing '='
-}
-
-export function toBytea(array: Uint8Array): Buffer {
-  return Buffer.from(array)
-}
 
 export function arrayToCSV(array: string[]): string {
   return array.join(',')
 }
 
 export function fromBase64UrlString(base64url: string): Uint8Array {
-  console.log('base64url: ', base64url)
   // Convert base64url to base64 by replacing URL-safe characters with the standard base64 equivalents
   const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/')
 

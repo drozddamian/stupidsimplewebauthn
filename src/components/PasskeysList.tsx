@@ -35,8 +35,6 @@ export const PasskeysList = () => {
 
       <div className="flex-col">
         {passkeys.map((passkey, index) => {
-          console.log('passkey: ', passkey)
-
           return (
             <div className="mb-2 flex flex-row" key={passkey.id}>
               <span className="mr-4 text-xl">{index})</span>
