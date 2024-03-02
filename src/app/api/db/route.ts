@@ -13,18 +13,17 @@ export async function GET() {
 
     await sql`
      CREATE TABLE IF NOT EXISTS authenticators (
-      id SERIAL PRIMARY KEY,
-      user_id INTEGER NOT NULL,
+      id SERIAL PRIMARY KEY, 
       credential_id TEXT NOT NULL,
       credential_public_key BYTEA NOT NULL,
       counter BIGINT NOT NULL,
       credential_device_type VARCHAR(32) NOT NULL,
       credential_backed_up BOOLEAN NOT NULL,
       transports VARCHAR(255),
-      CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE
+      CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
     );`
 
-    await sql`CREATE INDEX IF NOT EXISTS idx_authenticators_credentialID ON Authenticators (credential_id);`
+    await sql`CREATE INDEX idx_authenticators_credential_id ON authenticators(credential_id);`
 
     return NextResponse.json({ message: 'success' }, { status: 200 })
   } catch (error) {

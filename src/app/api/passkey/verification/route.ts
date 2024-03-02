@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     }
 
     const newAuthenticator: Authenticator = {
-      credentialID: registrationInfo.credentialPublicKey,
+      credentialID: registrationInfo.credentialID,
       credentialPublicKey: registrationInfo.credentialPublicKey,
       counter: registrationInfo.counter,
       credentialDeviceType: registrationInfo.credentialDeviceType,

@@ -30,12 +30,14 @@ export async function POST(req: Request) {
       existingUser.id,
     )
 
+    console.log('userAuthenticators: ', userAuthenticators)
+
     const options = await generateAuthenticationOptions({
       rpID,
-      // Require users to use a previously-registered authenticator
       allowCredentials: userAuthenticators?.map((authenticator) => ({
         id: authenticator.credentialID,
         type: 'public-key',
+        transports: authenticator.transports,
       })),
       userVerification: 'preferred',
     })

@@ -28,3 +28,13 @@ export type Authenticator = {
   // Ex: ['ble' | 'cable' | 'hybrid' | 'internal' | 'nfc' | 'smart-card' | 'usb']
   transports?: AuthenticatorTransportFuture[]
 }
+
+export type RawAuthenticator = {
+  id?: string
+  credential_id: Uint8Array
+  credential_public_key: Uint8Array
+  counter: number
+  credential_device_type: CredentialDeviceType
+  credential_backed_up: boolean
+  transports?: AuthenticatorTransportFuture[]
+}
