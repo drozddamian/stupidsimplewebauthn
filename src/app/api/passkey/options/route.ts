@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       rpID,
       userID: existingUser.id,
       userName: existingUser.username,
-      attestationType: 'none',
+      attestationType: 'direct',
       excludeCredentials: userAuthenticators?.map((authenticator) => ({
         id: authenticator.credentialID,
         type: 'public-key',
